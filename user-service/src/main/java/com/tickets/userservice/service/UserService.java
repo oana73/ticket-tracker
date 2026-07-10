@@ -34,5 +34,8 @@ public class UserService {
         }
     return Optional.empty();
     }
+    public Optional<User> findById(String id){
+        return userRepository.findById(id);
+    }
 }
 

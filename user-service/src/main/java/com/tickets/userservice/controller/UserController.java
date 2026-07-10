@@ -40,4 +40,14 @@ public class UserController {
             return ResponseEntity.status(401).body(error);
         }
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable String id){
+        Optional<User> userOptional = userService.findById(id);
+
+        if(userOptional.isPresent()){
+            return ResponseEntity.ok(userOptional.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
