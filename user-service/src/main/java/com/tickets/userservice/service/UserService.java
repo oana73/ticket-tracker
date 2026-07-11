@@ -2,7 +2,7 @@ package com.tickets.userservice.service;
 
 import com.tickets.userservice.model.User;
 import com.tickets.userservice.repository.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import com.tickets.userservice.security.JwtService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +14,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final JwtService jwtService;
 
-    public UserService(UserRepository userRepository){
+
+    public UserService(UserRepository userRepository, JwtService jwtService){
         this.userRepository = userRepository;
+        this.jwtService = jwtService;
     }
 
     public User register(User user){
@@ -41,6 +44,10 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public String generateTokenForUser(User user){
+        return jwtService.generateToken(user.getUsername(), user.getRole());
     }
 }
 

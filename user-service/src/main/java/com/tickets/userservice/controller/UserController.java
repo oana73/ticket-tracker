@@ -34,7 +34,12 @@ public class UserController {
         Optional<User> userOptional = userService.login(username,password);
 
         if(userOptional.isPresent()){
-            return ResponseEntity.ok(userOptional.get());
+            String token = userService.generateTokenForUser(userOptional.get());
+
+            Map<String, String> response = new HashMap<>();
+            response.put("token", token);
+            response.put("username", username);
+            return ResponseEntity.ok(response);
         } else {
             Map<String, String> error = new HashMap<>();
             error.put("message", "Invalid username or password");
