@@ -47,7 +47,7 @@ public class UserService {
     }
 
     public String generateTokenForUser(User user){
-        return jwtService.generateToken(user.getUsername(), user.getRole());
+        return jwtService.generateToken(user.getId(), user.getUsername(), user.getRole());
     }
 }
 

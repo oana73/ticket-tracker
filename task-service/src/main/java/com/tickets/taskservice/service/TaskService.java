@@ -3,11 +3,12 @@ package com.tickets.taskservice.service;
 import com.tickets.taskservice.model.Task;
 import com.tickets.taskservice.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -27,7 +28,10 @@ public class TaskService {
 
     public Task createTask(Task task, String authHeader) {
 
-        if (task.getAssignedUserId() != null) {
+        if (task.getAssignedUserId() == null || task.getAssignedUserId().isBlank()) {
+            String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+            task.setAssignedUserId(currentUserId);
+        } else {
             boolean userExists = checkUserExists(task.getAssignedUserId(), authHeader);
 
             if (!userExists) {
@@ -41,6 +45,7 @@ public class TaskService {
 
         return taskRepository.save(task);
     }
+
 
     private boolean checkUserExists(String userId, String authHeader) {
         try {

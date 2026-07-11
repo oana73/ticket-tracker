@@ -41,7 +41,7 @@ function TaskList({ token, refreshKey }: TaskListProps) {
             <ul>
                 {tasks.map(task => (
                     <li key={task.id}>
-                        <strong>{task.title}</strong> — {task.status} — {task.priority}
+                        <strong>{task.title}</strong> — {task.status} — {task.priority} — {task.assignedUserId}
                     </li>
                 ))}
             </ul>

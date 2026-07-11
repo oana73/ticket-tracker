@@ -44,4 +44,15 @@ public class JwtService {
             return false;
         }
     }
+
+    public String extractUserId(String token) {
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("userId", String.class);
+    }
+
+
 }
