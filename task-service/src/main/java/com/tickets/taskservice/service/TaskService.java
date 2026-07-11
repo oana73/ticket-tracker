@@ -5,6 +5,9 @@ import com.tickets.taskservice.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 
 import java.util.List;
 
@@ -22,10 +25,10 @@ public class TaskService {
         this.restTemplate = new RestTemplate();
     }
 
-    public Task createTask(Task task) {
+    public Task createTask(Task task, String authHeader) {
 
         if (task.getAssignedUserId() != null) {
-            boolean userExists = checkUserExists(task.getAssignedUserId());
+            boolean userExists = checkUserExists(task.getAssignedUserId(), authHeader);
 
             if (!userExists) {
                 throw new RuntimeException("Assigned user does not exist: " + task.getAssignedUserId());
@@ -39,9 +42,20 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    private boolean checkUserExists(String userId) {
+    private boolean checkUserExists(String userId, String authHeader) {
         try {
-            restTemplate.getForObject(userServiceUrl + "/api/users/" + userId, Object.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", authHeader);
+
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+            restTemplate.exchange(
+                    userServiceUrl + "/api/users/" + userId,
+                    HttpMethod.GET,
+                    entity,
+                    Object.class
+            );
+
             return true;
         } catch (Exception e) {
             return false;

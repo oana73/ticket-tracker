@@ -17,8 +17,9 @@ public class TaskController {
     }
 
     @PostMapping
-    public Task createTask(@RequestBody Task task) {
-        return taskService.createTask(task);
+    public Task createTask(@RequestBody Task task,
+                           @RequestHeader("Authorization") String authHeader) {
+        return taskService.createTask(task, authHeader);
     }
 
     @GetMapping
