@@ -2,10 +2,9 @@ package com.tickets.taskservice.controller;
 
 import com.tickets.taskservice.model.Task;
 import com.tickets.taskservice.service.TaskService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -20,5 +19,13 @@ public class TaskController {
     @PostMapping
     public Task createTask(@RequestBody Task task) {
         return taskService.createTask(task);
+    }
+
+    @GetMapping
+    public List<Task> getTasks(@RequestParam(required = false) String userId) {
+        if (userId != null) {
+            return taskService.getTasksByUserId(userId);
+        }
+        return taskService.getAllTasks();
     }
 }
