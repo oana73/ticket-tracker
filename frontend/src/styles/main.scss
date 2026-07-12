@@ -1,0 +1,92 @@
+@use 'variables' as *;
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, sans-serif;
+    background: $bg;
+    color: $text;
+}
+
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.auth-card {
+    background: $surface;
+    border: 1px solid $border;
+    border-radius: 12px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+
+    h2 {
+        margin: 0 0 1.5rem;
+        font-size: 1.5rem;
+    }
+}
+
+.input {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    margin-bottom: 0.9rem;
+    border: 1px solid $border;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: $text;
+    background: $surface;
+
+    &:focus {
+        outline: none;
+        border-color: $primary;
+    }
+
+    &::placeholder {
+        color: $muted;
+    }
+}
+
+.btn {
+    width: 100%;
+    padding: 0.7rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    background: $primary;
+    color: $surface;
+
+    &:hover {
+        background: $primary-hover;
+    }
+}
+
+.btn-link {
+    width: 100%;
+    margin-top: 0.9rem;
+    padding: 0.6rem;
+    background: none;
+    border: none;
+    color: $muted;
+    font-size: 0.9rem;
+    cursor: pointer;
+
+    &:hover {
+        color: $primary;
+    }
+}
+
+.error {
+    color: $danger;
+    font-size: 0.875rem;
+    margin: 0.75rem 0 0;
+}

@@ -22,10 +22,11 @@ function Login({ onLoginSuccess }: LoginProps) {
     }
 
     return (
-        <div>
+        <div className="auth-card">
             <h2>Login</h2>
 
             <input
+                className="input"
                 type="text"
                 placeholder="Username"
                 value={username}
@@ -33,15 +34,16 @@ function Login({ onLoginSuccess }: LoginProps) {
             />
 
             <input
+                className="input"
                 type="password"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
 
-            <button onClick={handleSubmit}>Login</button>
+            <button className="btn" onClick={handleSubmit}>Login</button>
 
-            {error && <p>{error}</p>}
+            {error && <p className="error">{error}</p>}
         </div>
     );
 }

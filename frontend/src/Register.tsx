@@ -23,10 +23,11 @@ function Register({ onRegisterSuccess }: RegisterProps) {
     }
 
     return (
-        <div>
+        <div className="auth-card">
             <h2>Register</h2>
 
             <input
+                className="input"
                 type="text"
                 placeholder="Username"
                 value={username}
@@ -34,6 +35,7 @@ function Register({ onRegisterSuccess }: RegisterProps) {
             />
 
             <input
+                className="input"
                 type="password"
                 placeholder="Password"
                 value={password}
@@ -41,13 +43,14 @@ function Register({ onRegisterSuccess }: RegisterProps) {
             />
 
             <input
+                className="input"
                 type="email"
                 placeholder="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
             />
 
-            <button onClick={handleSubmit}>Register</button>
+            <button className="btn" onClick={handleSubmit}>Register</button>
 
             {error && <p>{error}</p>}
         </div>

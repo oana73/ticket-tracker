@@ -38,17 +38,25 @@ function App() {
     if (!token) {
         if (showRegister) {
             return (
-                <div>
-                    <Register onRegisterSuccess={() => setShowRegister(false)} />
-                    <button onClick={() => setShowRegister(false)}>Back to login</button>
+                <div className="auth-page">
+                    <div>
+                        <Register onRegisterSuccess={() => setShowRegister(false)} />
+                        <button className="btn-link" onClick={() => setShowRegister(false)}>
+                            Back to login
+                        </button>
+                    </div>
                 </div>
             );
         }
 
         return (
-            <div>
-                <Login onLoginSuccess={handleLoginSuccess} />
-                <button onClick={() => setShowRegister(true)}>Create account</button>
+            <div className="auth-page">
+                <div>
+                    <Login onLoginSuccess={handleLoginSuccess} />
+                    <button className="btn-link" onClick={() => setShowRegister(true)}>
+                        Create account
+                    </button>
+                </div>
             </div>
         );
     }
