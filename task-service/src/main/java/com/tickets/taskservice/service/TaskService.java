@@ -71,6 +71,11 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
+    public List<Task> getMyTasks() {
+        String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+        return taskRepository.findByAssignedUserId(currentUserId);
+    }
+
     public Task updateTask(String id, Task updatedTask) {
 
         Task existingTask = taskRepository.findById(id)
@@ -86,6 +91,7 @@ public class TaskService {
     }
 
     public void deleteTask(String id) {
+
         taskRepository.deleteById(id);
     }
 

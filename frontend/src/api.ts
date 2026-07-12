@@ -1,4 +1,4 @@
-import type { Task, LoginResponse } from './types';
+import type { Task, LoginResponse, User } from './types';
 
 const USER_API = 'http://localhost:8081/api/users';
 const TASK_API = 'http://localhost:8082/api/tasks';
@@ -52,6 +52,17 @@ export async function createTask(
     return response.json();
 }
 
+export async function deleteTask(token: string, taskId: string): Promise<void> {
+    const response = await fetch(`${TASK_API}/${taskId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to delete task');
+    }
+}
+
 export async function register(
     username: string,
     password: string,
@@ -66,4 +77,28 @@ export async function register(
     if (!response.ok) {
         throw new Error('Registration failed');
     }
+}
+
+export async function getUsers(token: string): Promise<User[]> {
+    const response = await fetch(USER_API, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to load users');
+    }
+
+    return response.json();
+}
+
+export async function getMyTasks(token: string): Promise<Task[]> {
+    const response = await fetch(`${TASK_API}/my`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to load tasks');
+    }
+
+    return response.json();
 }

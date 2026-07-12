@@ -23,10 +23,19 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<Task> getTasks(@RequestParam(required = false) String userId) {
-        if (userId != null) {
-            return taskService.getTasksByUserId(userId);
-        }
+    public List<Task> getAllTasks() {
         return taskService.getAllTasks();
     }
+
+    @GetMapping("/my")
+    public List<Task> getMyTasks() {
+        return taskService.getMyTasks();
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteTask(@PathVariable String id) {
+        taskService.deleteTask(id);
+    }
+
+
 }

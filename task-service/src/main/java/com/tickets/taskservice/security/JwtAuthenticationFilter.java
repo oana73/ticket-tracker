@@ -29,15 +29,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
 
+        System.out.println(">>> FILTER RUNS - method=" + request.getMethod()
+                + " uri=" + request.getRequestURI()
+                + " header=" + authHeader);
+
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
 
-            if (jwtService.isTokenValid(token)) {
+            boolean valid = jwtService.isTokenValid(token);
+            System.out.println(">>> TOKEN VALID = " + valid);
+
+            if (valid) {
                 String userId = jwtService.extractUserId(token);
                 String role = jwtService.extractRole(token);
 
                 List<SimpleGrantedAuthority> authorities =
                         List.of(new SimpleGrantedAuthority("ROLE_" + role));
+
+                System.out.println(">>> userId=" + userId + " role=" + role + " authorities=" + authorities);
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userId, null, authorities);

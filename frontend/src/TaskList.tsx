@@ -1,21 +1,28 @@
 import { useState, useEffect } from 'react';
-import { getTasks } from './api';
+import { getTasks, deleteTask, getMyTasks } from './api';
 import type { Task } from './types';
 
 interface TaskListProps {
     token: string;
-    refreshKey :number;
+    refreshKey: number;
+    role: string;
+    view: string;
+    onTaskDeleted: () => void;
 }
 
-function TaskList({ token, refreshKey }: TaskListProps) {
+function TaskList({ token, refreshKey, role, view, onTaskDeleted }: TaskListProps) {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
+    
 
     useEffect(() => {
         async function loadTasks() {
+            setLoading(true);
             try {
-                const data = await getTasks(token);
+                const data = view === 'my'
+                    ? await getMyTasks (token)
+                    : await getTasks(token);
                 setTasks(data);
             } catch (err) {
                 setError('Failed to load tasks');
@@ -25,23 +32,32 @@ function TaskList({ token, refreshKey }: TaskListProps) {
         }
 
         loadTasks();
-    }, [token, refreshKey]);
+    }, [token, refreshKey, view]);
+
+    async function handleDelete(taskId: string) {
+        try {
+            await deleteTask(token, taskId);
+            onTaskDeleted();
+        } catch (err) {
+            setError('Failed to delete task');
+        }
+    }
 
     if (loading) {
         return <p>Loading...</p>;
     }
 
-    if (error) {
-        return <p>{error}</p>;
-    }
-
     return (
         <div>
-            <h2>Tasks</h2>
+            <h2>{view === 'my' ? 'My tasks' : 'All tasks'}</h2>
+            {error && <p>{error}</p>}
             <ul>
                 {tasks.map(task => (
                     <li key={task.id}>
-                        <strong>{task.title}</strong> — {task.status} — {task.priority} — {task.assignedUserId}
+                        <strong>{task.title}</strong> — {task.status} — {task.priority} — user: {task.assignedUserId}
+                        {role === 'ADMIN' && (
+                            <button onClick={() => handleDelete(task.id)}>Delete</button>
+                        )}
                     </li>
                 ))}
             </ul>
