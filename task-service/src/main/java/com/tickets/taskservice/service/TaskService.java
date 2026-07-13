@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -76,19 +79,7 @@ public class TaskService {
         return taskRepository.findByAssignedUserId(currentUserId);
     }
 
-    public Task updateTask(String id, Task updatedTask) {
 
-        Task existingTask = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found: " + id));
-
-        existingTask.setTitle(updatedTask.getTitle());
-        existingTask.setDescription(updatedTask.getDescription());
-        existingTask.setStatus(updatedTask.getStatus());
-        existingTask.setPriority(updatedTask.getPriority());
-        existingTask.setAssignedUserId(updatedTask.getAssignedUserId());
-
-        return taskRepository.save(existingTask);
-    }
 
     public void deleteTask(String id) {
 
@@ -98,4 +89,34 @@ public class TaskService {
     public List<Task> getTasksByUserId(String userId){
         return taskRepository.findByAssignedUserId(userId);
     }
+
+    public Task updateTask(String id, Task updatedTask) {
+
+        Task existingTask = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found: " + id));
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserId = auth.getName();
+
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        boolean isOwner = currentUserId.equals(existingTask.getAssignedUserId());
+
+        if (!isAdmin && !isOwner) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only edit your own tasks");
+        }
+
+        existingTask.setTitle(updatedTask.getTitle());
+        existingTask.setDescription(updatedTask.getDescription());
+        existingTask.setStatus(updatedTask.getStatus());
+        existingTask.setPriority(updatedTask.getPriority());
+
+        if (isAdmin) {
+            existingTask.setAssignedUserId(updatedTask.getAssignedUserId());
+        }
+
+        return taskRepository.save(existingTask);
+    }
+
 }

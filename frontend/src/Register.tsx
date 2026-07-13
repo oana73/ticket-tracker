@@ -14,6 +14,21 @@ function Register({ onRegisterSuccess }: RegisterProps) {
     async function handleSubmit() {
         setError('');
 
+        if (!username || !password || !email) {
+            setError('All fields are required');
+            return;
+        }
+
+        if (!email.includes('@') || !email.includes('.')) {
+            setError('Please enter a valid email address');
+            return;
+        }
+
+        if (password.length < 6) {
+            setError('Password must be at least 6 characters');
+            return;
+        }
+
         try {
             await register(username, password, email);
             onRegisterSuccess();

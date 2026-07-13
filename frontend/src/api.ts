@@ -102,3 +102,20 @@ export async function getMyTasks(token: string): Promise<Task[]> {
 
     return response.json();
 }
+
+export async function updateTask(token: string, task: Task): Promise<Task> {
+    const response = await fetch(`${TASK_API}/${task.id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(task)
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to update task');
+    }
+
+    return response.json();
+}

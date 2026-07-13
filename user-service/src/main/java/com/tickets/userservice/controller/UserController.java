@@ -3,6 +3,7 @@ package com.tickets.userservice.controller;
 
 import com.tickets.userservice.model.User;
 import com.tickets.userservice.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user){
+    public ResponseEntity<User> register(@Valid @RequestBody User user) {
         User savedUser = userService.register(user);
         return ResponseEntity.ok(savedUser);
     }

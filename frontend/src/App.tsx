@@ -14,8 +14,7 @@ function App() {
 
     const role = getRoleFromToken(token);
 
-
-    function handleLoginSuccess(newToken: string, newUsername: string, newRole: string) {
+    function handleLoginSuccess(newToken: string, newUsername: string) {
         localStorage.setItem('token', newToken);
         localStorage.setItem('username', newUsername);
 
@@ -62,19 +61,42 @@ function App() {
     }
 
     return (
-        <div>
-            <h1>Task Manager</h1>
-            <p>Logged in as: {username} <button onClick={handleLogout}>Logout</button></p>
-            <CreateTask token={token} role={role} onTaskCreated={handleTasksChanged} />
-             <div>
-                <button onClick={() => setView('my')}>My tasks</button>
-                <button onClick={() => setView('all')}>Explore</button>
+        <div className="page">
+            <div className="header">
+                <h1>Task Manager</h1>
+                <div className="user-info">
+                    <span>{username}</span>
+                    <span className="badge">{role}</span>
+                    <button className="logout" onClick={handleLogout}>Logout</button>
+                </div>
             </div>
-            <TaskList token={token} refreshKey={refreshKey} role={role} view={view} onTaskDeleted={handleTasksChanged}/>
+
+            <CreateTask token={token} role={role} onTaskCreated={handleTasksChanged} />
+
+            <div className="tabs">
+                <button
+                    className={view === 'my' ? 'tab active' : 'tab'}
+                    onClick={() => setView('my')}
+                >
+                    My tasks
+                </button>
+                <button
+                    className={view === 'all' ? 'tab active' : 'tab'}
+                    onClick={() => setView('all')}
+                >
+                    Explore
+                </button>
+            </div>
+
+            <TaskList
+                token={token}
+                refreshKey={refreshKey}
+                role={role}
+                view={view}
+                onTaskDeleted={handleTasksChanged}
+            />
         </div>
     );
 }
-
-
 
 export default App;

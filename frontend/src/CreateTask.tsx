@@ -48,45 +48,55 @@ function CreateTask({ token, role, onTaskCreated }: CreateTaskProps) {
     }
 
     return (
-        <div>
+        <div className="card">
             <h2>Create task</h2>
 
-            <input
-                type="text"
-                placeholder="Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-            />
+            <div className="form-row">
+                <input
+                    className="input"
+                    type="text"
+                    placeholder="Title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
 
-            <input
-                type="text"
-                placeholder="Description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-            />
+                <input
+                    className="input"
+                    type="text"
+                    placeholder="Description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
 
-            <select value={priority} onChange={(e) => setPriority(e.target.value)}>
-                <option value="LOW">LOW</option>
-                <option value="MEDIUM">MEDIUM</option>
-                <option value="HIGH">HIGH</option>
-            </select>
-
-            {role === 'ADMIN' &&(
                 <select
-                    value={assignedUserId}
-                    onChange={(e) => setAssignedUserId(e.target.value)}
+                    className="select"
+                    value={priority}
+                    onChange={(e) => setPriority(e.target.value)}
                 >
-                    <option value="">Assign to myself</option>
-                    {users.map(user => (
-                        <option key={user.id} value={user.id}>
-                            {user.username}
-                        </option>
-                    ))}
-                </select>)}
+                    <option value="LOW">LOW</option>
+                    <option value="MEDIUM">MEDIUM</option>
+                    <option value="HIGH">HIGH</option>
+                </select>
 
-            <button onClick={handleSubmit}>Create</button>
+                {role === 'ADMIN' && (
+                    <select
+                        className="select"
+                        value={assignedUserId}
+                        onChange={(e) => setAssignedUserId(e.target.value)}
+                    >
+                        <option value="">Assign to myself</option>
+                        {users.map(user => (
+                            <option key={user.id} value={user.id}>
+                                {user.username}
+                            </option>
+                        ))}
+                    </select>
+                )}
 
-            {error && <p>{error}</p>}
+                <button className="btn-inline" onClick={handleSubmit}>Create</button>
+            </div>
+
+            {error && <p className="error">{error}</p>}
         </div>
     );
 }
